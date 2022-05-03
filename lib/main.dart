@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hybrd_app/onboarding/onboard.dart';
+import 'package:hybrd_app/onboarding/splash_screen.dart';
 
 void main() {
   runApp(const MainHybrd());
@@ -13,7 +13,7 @@ class MainHybrd extends StatelessWidget {
     return MaterialApp(
       title: "Hybrd",
       theme: ThemeData(primarySwatch: Colors.orange),
-      home: const OnBoardingPage()
+      home: const SplashLogo()
     );
   }
 }
