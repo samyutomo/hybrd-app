@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hybrd_app/authentication/sign_in.dart';
 import 'package:hybrd_app/authentication/sign_up.dart';
 import 'package:onboarding/onboarding.dart';
 
@@ -140,12 +141,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                               children: [
                                 ElevatedButton(
                                     onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) =>
-                                              const AlertDialog(
-                                                content: Text("Log In"),
-                                              ));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const SignInMember()));
                                     },
                                     style: ButtonStyle(
                                         shape: MaterialStateProperty.all(
@@ -181,7 +181,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                                           fontSize: 20),
                                     ),
                                     style: OutlinedButton.styleFrom(
-                                      side: const BorderSide(color: Colors.orange, width: 2.0),
+                                        side: const BorderSide(
+                                            color: Colors.orange, width: 2.0),
                                         backgroundColor: Colors.white,
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 15),
