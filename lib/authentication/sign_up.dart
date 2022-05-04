@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hybrd_app/authentication/sign_in.dart';
+import 'package:hybrd_app/pages/home.dart';
 
 class SignUpMember extends StatelessWidget {
   const SignUpMember({Key? key}) : super(key: key);
@@ -9,81 +11,76 @@ class SignUpMember extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
             child: Stack(
-              children: [
-                Image.asset(
-                  'images/background.png',
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
+      children: [
+        Image.asset(
+          'images/background.png',
+          width: MediaQuery.of(context).size.width,
+          height: double.infinity,
+          fit: BoxFit.cover,
+        ),
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 50),
+                child: const Text(
+                  "Create your account",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 28,
+                  ),
                 ),
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 50),
-                        child: const Text(
-                          "Create your account",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
+              ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Do you already have an account?",
+                      style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const SignInMember();
+                        }));
+                      },
+                      child: const Text(
+                        "Sign In",
+                        style: TextStyle(
                             fontFamily: 'Poppins',
-                            fontSize: 28,
-                          ),
-                        ),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Do you already have an account?",
-                              style: TextStyle(
-                                  fontFamily: 'Poppins', fontSize: 14),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (context){
-                                      return const SignInMember();
-                                    }
-                                ));
-                              },
-                              child: const Text(
-                                "Sign In",
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      const InputField()
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-                Positioned(
-                  top: 10,
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          size: 35,
-                        )),
-                  ),
-                )
-              ],
-            )));
+              ),
+              const InputField()
+            ],
+          ),
+        ),
+        Positioned(
+          top: 10,
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  size: 35,
+                )),
+          ),
+        )
+      ],
+    )));
   }
 }
 
@@ -97,16 +94,26 @@ class InputField extends StatefulWidget {
 class _InputFieldState extends State<InputField> {
   bool _hidePassword = true;
   bool _agreeTerm = false;
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _controllerUser = TextEditingController();
+  final TextEditingController _controllerGen = TextEditingController();
+  final TextEditingController _controllerMail = TextEditingController();
+  final TextEditingController _controllerPass = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _controllerUser.dispose();
+    _controllerGen.dispose();
+    _controllerMail.dispose();
+    _controllerPass.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
           child: TextFormField(
@@ -120,6 +127,7 @@ class _InputFieldState extends State<InputField> {
                   return null;
                 }
               },
+              controller: _controllerUser,
               decoration: const InputDecoration(
                 hintText: "Your Username",
                 labelText: "Username",
@@ -137,18 +145,19 @@ class _InputFieldState extends State<InputField> {
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
           child: TextFormField(
             validator: (String? value) {
-              if (value?.compareTo("Male") != 0 && value?.compareTo("Female") != 0) {
+              if (value?.compareTo("Male") != 0 &&
+                  value?.compareTo("Female") != 0) {
                 return "Please choose from drop down choices!";
               } else {
                 return null;
               }
             },
-            controller: _controller,
+            controller: _controllerGen,
             decoration: InputDecoration(
                 suffixIcon: PopupMenuButton(
                   icon: const Icon(Icons.arrow_drop_down),
                   onSelected: (String value) {
-                    _controller.text = value;
+                    _controllerGen.text = value;
                   },
                   itemBuilder: (BuildContext context) {
                     return [
@@ -174,8 +183,8 @@ class _InputFieldState extends State<InputField> {
             padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
             child: TextFormField(
                 validator: (value) {
-                  bool validEmail =
-                  RegExp(r"^[a-zA-Z0-9_.-]+@[a-zA-Z0-9]+[a-zA-Z.]+$")
+                  bool validEmail = RegExp(
+                          r"^[a-zA-Z0-9_.-]+@[a-zA-Z0-9]+\.[a-zA-Z]+[a-zA-Z]+[a-zA-Z.]*$")
                       .hasMatch(value!);
                   if (value.isEmpty) {
                     return "Input can't be empty!";
@@ -185,6 +194,7 @@ class _InputFieldState extends State<InputField> {
                     return null;
                   }
                 },
+                controller: _controllerMail,
                 decoration: const InputDecoration(
                     hintText: "Your Email",
                     labelText: "Email",
@@ -198,7 +208,7 @@ class _InputFieldState extends State<InputField> {
                         borderSide: BorderSide(color: Colors.white))))),
         Padding(
           padding:
-          const EdgeInsets.only(top: 10.0, right: 40, left: 40, bottom: 40),
+              const EdgeInsets.only(top: 10.0, right: 40, left: 40, bottom: 40),
           child: TextFormField(
               validator: (value) {
                 if (value == null || value.isEmpty || value.length < 8) {
@@ -207,6 +217,7 @@ class _InputFieldState extends State<InputField> {
                   return null;
                 }
               },
+              controller: _controllerPass,
               obscureText: _hidePassword,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
@@ -247,19 +258,51 @@ class _InputFieldState extends State<InputField> {
           padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: ElevatedButton(
               onPressed: _agreeTerm
-                  ? () {
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Register Success"))
-                  );
-                } else {
-                  showDialog(context: context,
-                      builder: (context) {
-                        return const AlertDialog(content: Text("Error Input"));
+                  ? () async {
+                      if (_formKey.currentState!.validate()) {
+                        try {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Registering to home...")));
+                          var credential = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                            email: _controllerMail.text,
+                            password: _controllerPass.text,
+                          );
+                          await credential.user!
+                              .updateDisplayName(_controllerUser.text);
+
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage(
+                                      credential: credential)));
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'weak-password') {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const AlertDialog(
+                                      content:
+                                          Text("Your password is too weak"));
+                                });
+                          } else if (e.code == 'email-already-in-use') {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const AlertDialog(
+                                      content: Text(
+                                          "The account already exists for that email"));
+                                });
+                          }
+                        } catch (e) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(content: Text(e.toString()));
+                              });
+                        }
                       }
-                  );
-                }
-              }
+                    }
                   : null,
               style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(

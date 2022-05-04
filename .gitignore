@@ -44,3 +44,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Ignore google services json
+google-services.json
+
+# Ignore firebase options
+firebase_options.dart
