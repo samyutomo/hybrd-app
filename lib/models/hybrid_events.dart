@@ -21,7 +21,7 @@ class HybridEvent {
       required this.imageAsset});
 }
 
-var tourismPlaceList = [
+var onsiteEventList = [
   HybridEvent(
     tag: "skye",
     name: "SKYE Restaurant & Lounge",
@@ -54,7 +54,10 @@ var tourismPlaceList = [
     price: "Rp 195.000",
     description: "Jakarta Aquarium, terletak di lantai LG dan LM Neo Soho Mall. Sebuah mall yang bisa dibilang masih baru, dekat dengan Central Park dan Mall Taman Anggrek. Jakarta Aquarium adalah indoor aquarium terbesar di Indonesia yang menjadi bagian dari Management Taman Safari Indonesia. Sesuai dengan namanya, ada berbagai jenis makhluk laut dan ikan-ikan tropis yang ada di dalam aquarium ini. Tentunya tempat ini pas banget, kalau kamu ingin mengajak keluarga berlibur sambil melihat dan mengenal jenis-jenis makhluk laut. Untuk kamu yang membawa bayi, jangan khawatir, tempat ini cukup luas sehingga kamu bisa membawa stroller dengan leluasa. Untuk kamu yang ingin mencoba pengalaman diving atau sea-walking, kamu juga bisa mencobanya di sini. Seru, kan? Yuk, berwisata ke sini!",
     imageAsset: 'https://i.pinimg.com/564x/65/43/aa/6543aac02356113ccb729fafc28d763f.jpg',
-  ),
+  )
+];
+
+var onlineEventList = [
   HybridEvent(
     tag: "dcdg",
     name: "Peluang Karier Sebagai Blockchain Developer",

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hybrd_app/models/hybrid_events.dart';
 import 'package:logger/logger.dart';
 
 class HomePage extends StatelessWidget {
@@ -76,7 +77,7 @@ class HomePage extends StatelessWidget {
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                       borderRadius:
-                                      BorderRadius.circular(20)))),
+                                          BorderRadius.circular(20)))),
                           child: const Text("Logout")),
                     ),
                   ]),
@@ -93,7 +94,7 @@ class HomePage extends StatelessWidget {
                               bottomLeft: Radius.circular(20)),
                           child: CachedNetworkImage(
                             imageUrl:
-                            'https://i.pinimg.com/564x/be/92/e9/be92e978d325698600a3e4eacf1d94e5.jpg',
+                                'https://i.pinimg.com/564x/be/92/e9/be92e978d325698600a3e4eacf1d94e5.jpg',
                             width: double.infinity,
                             height: 200,
                             fit: BoxFit.cover,
@@ -154,595 +155,223 @@ class HomePage extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   height: 250,
-                  child: ListView(
+                  child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      Card(
-                        margin: const EdgeInsets.only(right: 20, bottom: 10),
-                        color: const Color.fromRGBO(245, 229, 220, 1),
-                        shadowColor: Colors.black45,
-                        elevation: 8.0,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(26))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                      'https://i.pinimg.com/564x/37/dc/be/37dcbe708a2c8433c6b5f7608301090c.jpg',
-                                      width: imageEventWidth,
-                                      height: 110,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: imageEventWidth,
-                                    margin: const EdgeInsets.only(top: 120),
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Text(
-                                            "SKYE Restaurant & Lounge",
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
+                    itemBuilder: (BuildContext context, int index) {
+                      HybridEvent event = onsiteEventList[index];
+                      return InkWell(
+                        onTap: () {},
+                        child: Card(
+                          margin: const EdgeInsets.only(right: 20, bottom: 10),
+                          color: const Color.fromRGBO(245, 229, 220, 1),
+                          shadowColor: Colors.black45,
+                          elevation: 8.0,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(26))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(20)),
+                                      child: Hero(
+                                        tag: event.tag,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                          event.imageAsset,
+                                          width: imageEventWidth,
+                                          height: 110,
+                                          fit: BoxFit.cover,
                                         ),
-                                        Container(
-                                          width: double.infinity,
-                                          height: 30,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Stack(
-                                            alignment: Alignment.centerLeft,
+                                      ),
+                                    ),
+                                    Container(
+                                      width: imageEventWidth,
+                                      margin: const EdgeInsets.only(top: 120),
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: Text(
+                                              event.name,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            height: 30,
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Stack(
+                                              alignment: Alignment.centerLeft,
+                                              children: [
+                                                const SizedBox(width: 20),
+                                                Positioned(
+                                                  left: 0,
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child: CircleAvatar(
+                                                      backgroundImage: NetworkImage(
+                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: 20,
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child: CircleAvatar(
+                                                      backgroundImage: NetworkImage(
+                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: 40,
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child: CircleAvatar(
+                                                      backgroundImage: NetworkImage(
+                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                    left: 65,
+                                                    child: Text(
+                                                      "+${randomUser()} going",
+                                                      style: const TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.indigo),
+                                                    ))
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Row(
                                             children: [
-                                              const SizedBox(width: 20),
-                                              Positioned(
-                                                left: 0,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
+                                              const Expanded(
+                                                  flex: 1,
+                                                  child: Icon(
+                                                    Icons.location_on,
+                                                    color: Colors.red,
+                                                    size: 20,
+                                                  )),
+                                              Expanded(
+                                                flex: 6,
+                                                child: Text(
+                                                  event.hybrid,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.fade,
                                                 ),
                                               ),
-                                              Positioned(
-                                                left: 20,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 40,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  left: 65,
-                                                  child: Text(
-                                                    "+${randomUser()} going",
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Colors.indigo),
-                                                  ))
                                             ],
                                           ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 1,
-                                                child: Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                )),
-                                            Expanded(
-                                              flex: 6,
-                                              child: Text(
-                                                "BCA Tower, Lt. 56, Jl. M.H. Thamrin No. 1, Menteng",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.fade,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      width: 200,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                    Radius.circular(20),
-                                                    bottomRight:
-                                                    Radius.circular(10))),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.all(10.0),
-                                              child: Column(
-                                                children: const [
-                                                  Text("10-21",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red)),
-                                                  Text("OPEN",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 20, right: 4),
-                                            height: 35,
-                                            width: 35,
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                    Radius.circular(20),
-                                                    bottomLeft:
-                                                    Radius.circular(10))),
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          "Event Saved")));
-                                                },
-                                                icon: const Icon(
-                                                  Icons.bookmark,
-                                                  color: Colors.red,
-                                                  size: 17,
-                                                )),
-                                          )
                                         ],
-                                      ))
-                                ],
-                              ),
-                            ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                        width: 200,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.white70,
+                                                  borderRadius:
+                                                  BorderRadius.only(
+                                                      topLeft:
+                                                      Radius.circular(
+                                                          20),
+                                                      bottomRight:
+                                                      Radius.circular(
+                                                          10))),
+                                              child: Padding(
+                                                padding:
+                                                const EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  children: [
+                                                    Text(event.hour,
+                                                        style: const TextStyle(
+                                                            fontFamily:
+                                                            'Poppins',
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                            FontWeight.bold,
+                                                            color: Colors.red)),
+                                                    Text(event.date,
+                                                        style: const TextStyle(
+                                                            fontFamily:
+                                                            'Poppins',
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                            FontWeight.bold,
+                                                            color: Colors.red))
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 20, right: 4),
+                                              height: 35,
+                                              width: 35,
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.white70,
+                                                  borderRadius:
+                                                  BorderRadius.only(
+                                                      topRight:
+                                                      Radius.circular(
+                                                          20),
+                                                      bottomLeft:
+                                                      Radius.circular(
+                                                          10))),
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    ScaffoldMessenger.of(
+                                                        context)
+                                                        .showSnackBar(
+                                                        const SnackBar(
+                                                            content: Text(
+                                                                "Event Saved")));
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.bookmark,
+                                                    color: Colors.red,
+                                                    size: 17,
+                                                  )),
+                                            )
+                                          ],
+                                        ))
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Card(
-                        margin: const EdgeInsets.only(right: 20, bottom: 10),
-                        color: const Color.fromRGBO(245, 229, 220, 1),
-                        shadowColor: Colors.black45,
-                        elevation: 8.0,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(26))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                      'https://i.pinimg.com/564x/c9/fd/cd/c9fdcd6c535b18372383830986fc6df7.jpg',
-                                      width: imageEventWidth,
-                                      height: 110,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: imageEventWidth,
-                                    margin: const EdgeInsets.only(top: 120),
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Text(
-                                            "Sushi Hiro",
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          height: 30,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Stack(
-                                            alignment: Alignment.centerLeft,
-                                            children: [
-                                              const SizedBox(width: 20),
-                                              Positioned(
-                                                left: 0,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 20,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 40,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  left: 65,
-                                                  child: Text(
-                                                    "+${randomUser()} going",
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Colors.indigo),
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 1,
-                                                child: Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                )),
-                                            Expanded(
-                                              flex: 6,
-                                              child: Text(
-                                                "Ruko Garden House Blok B No. 18D",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.fade,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      width: 200,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                    Radius.circular(20),
-                                                    bottomRight:
-                                                    Radius.circular(10))),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.all(10.0),
-                                              child: Column(
-                                                children: const [
-                                                  Text("12-18",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red)),
-                                                  Text("OPEN",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 20, right: 4),
-                                            height: 35,
-                                            width: 35,
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                    Radius.circular(20),
-                                                    bottomLeft:
-                                                    Radius.circular(10))),
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          "Event Saved")));
-                                                },
-                                                icon: const Icon(
-                                                  Icons.bookmark,
-                                                  color: Colors.red,
-                                                  size: 17,
-                                                )),
-                                          )
-                                        ],
-                                      ))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Card(
-                        margin: const EdgeInsets.only(right: 20, bottom: 10),
-                        color: const Color.fromRGBO(245, 229, 220, 1),
-                        shadowColor: Colors.black45,
-                        elevation: 8.0,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(26))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                      'https://i.pinimg.com/564x/65/43/aa/6543aac02356113ccb729fafc28d763f.jpg',
-                                      width: imageEventWidth,
-                                      height: 110,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: imageEventWidth,
-                                    margin: const EdgeInsets.only(top: 120),
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Text(
-                                            "Jakarta Aquarium",
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          height: 30,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Stack(
-                                            alignment: Alignment.centerLeft,
-                                            children: [
-                                              const SizedBox(width: 20),
-                                              Positioned(
-                                                left: 0,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 20,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 40,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  left: 65,
-                                                  child: Text(
-                                                    "+${randomUser()} going",
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Colors.indigo),
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 1,
-                                                child: Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                )),
-                                            Expanded(
-                                              flex: 6,
-                                              child: Text(
-                                                "Neo SOHO, Lt. LG 101 - LGM 101",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.fade,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      width: 200,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                    Radius.circular(20),
-                                                    bottomRight:
-                                                    Radius.circular(10))),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.all(10.0),
-                                              child: Column(
-                                                children: const [
-                                                  Text("10-16",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red)),
-                                                  Text("Everyday",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 20, right: 4),
-                                            height: 35,
-                                            width: 35,
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                    Radius.circular(20),
-                                                    bottomLeft:
-                                                    Radius.circular(10))),
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          "Event Saved")));
-                                                },
-                                                icon: const Icon(
-                                                  Icons.bookmark,
-                                                  color: Colors.red,
-                                                  size: 17,
-                                                )),
-                                          )
-                                        ],
-                                      ))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                      );
+                    },
+                    itemCount: onsiteEventList.length,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -757,597 +386,226 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                  margin:
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 30),
                   height: 250,
-                  child: ListView(
+                  child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      Card(
-                        margin: const EdgeInsets.only(right: 20, bottom: 10),
-                        color: const Color.fromRGBO(245, 229, 220, 1),
-                        shadowColor: Colors.black45,
-                        elevation: 8.0,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(26))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                      'https://i.pinimg.com/564x/30/62/3a/30623adcfddc9557449d6a684ed867f5.jpg',
-                                      width: imageEventWidth,
-                                      height: 110,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: imageEventWidth,
-                                    margin: const EdgeInsets.only(top: 120),
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Text(
-                                            "Peluang Karier Sebagai Blockchain Developer",
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
+                    itemBuilder: (BuildContext context, int index) {
+                      HybridEvent event = onlineEventList[index];
+                      return InkWell(
+                        onTap: () {},
+                        child: Card(
+                          margin: const EdgeInsets.only(right: 20, bottom: 10),
+                          color: const Color.fromRGBO(245, 229, 220, 1),
+                          shadowColor: Colors.black45,
+                          elevation: 8.0,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(26))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(20)),
+                                      child: Hero(
+                                        tag: event.tag,
+                                        child: CachedNetworkImage( 
+                                          imageUrl:
+                                              event.imageAsset,
+                                          width: imageEventWidth,
+                                          height: 110,
+                                          fit: BoxFit.cover,
                                         ),
-                                        Container(
-                                          width: double.infinity,
-                                          height: 30,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Stack(
-                                            alignment: Alignment.centerLeft,
+                                      ),
+                                    ),
+                                    Container(
+                                      width: imageEventWidth,
+                                      margin: const EdgeInsets.only(top: 120),
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            child: Text(
+                                              event.name,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  fontFamily: 'Poppins',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            height: 30,
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Stack(
+                                              alignment: Alignment.centerLeft,
+                                              children: [
+                                                const SizedBox(width: 20),
+                                                Positioned(
+                                                  left: 0,
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child: CircleAvatar(
+                                                      backgroundImage: NetworkImage(
+                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: 20,
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child: CircleAvatar(
+                                                      backgroundImage: NetworkImage(
+                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: 40,
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child: CircleAvatar(
+                                                      backgroundImage: NetworkImage(
+                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                    left: 65,
+                                                    child: Text(
+                                                      "+${randomUser()} going",
+                                                      style: const TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.indigo),
+                                                    ))
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Row(
                                             children: [
-                                              const SizedBox(width: 20),
-                                              Positioned(
-                                                left: 0,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
+                                              const Expanded(
+                                                  flex: 1,
+                                                  child: Icon(
+                                                    Icons.location_on,
+                                                    color: Colors.red,
+                                                    size: 20,
+                                                  )),
+                                              Expanded(
+                                                flex: 6,
+                                                child: Text(
+                                                  event.hybrid,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.fade,
                                                 ),
                                               ),
-                                              Positioned(
-                                                left: 20,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 40,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  left: 65,
-                                                  child: Text(
-                                                    "+${randomUser()} going",
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Colors.indigo),
-                                                  ))
                                             ],
                                           ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 1,
-                                                child: Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                )),
-                                            Expanded(
-                                              flex: 6,
-                                              child: Text(
-                                                "Online Youtube",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.fade,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      width: 200,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                    Radius.circular(20),
-                                                    bottomRight:
-                                                    Radius.circular(10))),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.all(10.0),
-                                              child: Column(
-                                                children: const [
-                                                  Text("28",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red)),
-                                                  Text("April",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 20, right: 4),
-                                            height: 35,
-                                            width: 35,
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                    Radius.circular(20),
-                                                    bottomLeft:
-                                                    Radius.circular(10))),
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          "Event Saved")));
-                                                },
-                                                icon: const Icon(
-                                                  Icons.bookmark,
-                                                  color: Colors.red,
-                                                  size: 17,
-                                                )),
-                                          )
                                         ],
-                                      ))
-                                ],
-                              ),
-                            ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                        width: 200,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.white70,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  20),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  10))),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  children: [
+                                                    Text(event.hour,
+                                                        style: const TextStyle(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.red)),
+                                                    Text(event.date,
+                                                        style: const TextStyle(
+                                                            fontFamily:
+                                                                'Poppins',
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.red))
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 20, right: 4),
+                                              height: 35,
+                                              width: 35,
+                                              decoration: const BoxDecoration(
+                                                  color: Colors.white70,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  20),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  10))),
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                            const SnackBar(
+                                                                content: Text(
+                                                                    "Event Saved")));
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.bookmark,
+                                                    color: Colors.red,
+                                                    size: 17,
+                                                  )),
+                                            )
+                                          ],
+                                        ))
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Card(
-                        margin: const EdgeInsets.only(right: 20, bottom: 10),
-                        color: const Color.fromRGBO(245, 229, 220, 1),
-                        shadowColor: Colors.black45,
-                        elevation: 8.0,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(26))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                      'https://i.pinimg.com/564x/5f/44/24/5f4424d79ac7952dae4747a7c967bc74.jpg',
-                                      width: imageEventWidth,
-                                      height: 110,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: imageEventWidth,
-                                    margin: const EdgeInsets.only(top: 120),
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Text(
-                                            "VIRTUAL INTERNATIONAL EDUCATION EXPO 2022",
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          height: 30,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Stack(
-                                            alignment: Alignment.centerLeft,
-                                            children: [
-                                              const SizedBox(width: 20),
-                                              Positioned(
-                                                left: 0,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 20,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 40,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  left: 65,
-                                                  child: Text(
-                                                    "+${randomUser()} going",
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Colors.indigo),
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 1,
-                                                child: Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                )),
-                                            Expanded(
-                                              flex: 6,
-                                              child: Text(
-                                                "Online GMeet",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.fade,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      width: 200,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                    Radius.circular(20),
-                                                    bottomRight:
-                                                    Radius.circular(10))),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.all(10.0),
-                                              child: Column(
-                                                children: const [
-                                                  Text("21-22",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red)),
-                                                  Text("MEI",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 20, right: 4),
-                                            height: 35,
-                                            width: 35,
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                    Radius.circular(20),
-                                                    bottomLeft:
-                                                    Radius.circular(10))),
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          "Event Saved")));
-                                                },
-                                                icon: const Icon(
-                                                  Icons.bookmark,
-                                                  color: Colors.red,
-                                                  size: 17,
-                                                )),
-                                          )
-                                        ],
-                                      ))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Card(
-                        margin: const EdgeInsets.only(right: 20, bottom: 10),
-                        color: const Color.fromRGBO(245, 229, 220, 1),
-                        shadowColor: Colors.black45,
-                        elevation: 8.0,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(26))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                      'https://i.pinimg.com/564x/7d/69/66/7d6966d850e66adc15ca3d132ce183b7.jpg',
-                                      width: imageEventWidth,
-                                      height: 110,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Container(
-                                    width: imageEventWidth,
-                                    margin: const EdgeInsets.only(top: 120),
-                                    alignment: Alignment.centerLeft,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: Text(
-                                            "Understanding the Importance of UIUX for Digital Startup Products",
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: double.infinity,
-                                          height: 30,
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Stack(
-                                            alignment: Alignment.centerLeft,
-                                            children: [
-                                              const SizedBox(width: 20),
-                                              Positioned(
-                                                left: 0,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 20,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: 40,
-                                                child: SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  left: 65,
-                                                  child: Text(
-                                                    "+${randomUser()} going",
-                                                    style: const TextStyle(
-                                                        fontFamily: 'Poppins',
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Colors.indigo),
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Row(
-                                          children: const [
-                                            Expanded(
-                                                flex: 1,
-                                                child: Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.red,
-                                                  size: 20,
-                                                )),
-                                            Expanded(
-                                              flex: 6,
-                                              child: Text(
-                                                "Online Zoom",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.fade,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                      width: 200,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                    Radius.circular(20),
-                                                    bottomRight:
-                                                    Radius.circular(10))),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.all(10.0),
-                                              child: Column(
-                                                children: const [
-                                                  Text("13",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red)),
-                                                  Text("Mei",
-                                                      style: TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Colors.red))
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                bottom: 20, right: 4),
-                                            height: 35,
-                                            width: 35,
-                                            decoration: const BoxDecoration(
-                                                color: Colors.white70,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                    Radius.circular(20),
-                                                    bottomLeft:
-                                                    Radius.circular(10))),
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                      content: Text(
-                                                          "Event Saved")));
-                                                },
-                                                icon: const Icon(
-                                                  Icons.bookmark,
-                                                  color: Colors.red,
-                                                  size: 17,
-                                                )),
-                                          )
-                                        ],
-                                      ))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
+                      );
+                    },
+                    itemCount: onlineEventList.length,
                   ),
                 )
               ],
@@ -1425,7 +683,6 @@ class HomePage extends StatelessWidget {
                   ],
                 )),
           ),
-
         ],
       )),
     );
