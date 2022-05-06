@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hybrd_app/authentication/sign_in.dart';
-import 'package:hybrd_app/pages/home.dart';
+import 'package:hybrd_app/pages/load_user.dart';
+import 'package:logger/logger.dart';
 
 class SignUpMember extends StatelessWidget {
   const SignUpMember({Key? key}) : super(key: key);
@@ -108,6 +109,16 @@ class _InputFieldState extends State<InputField> {
     _controllerPass.dispose();
     super.dispose();
   }
+
+  var logger = Logger(
+    printer: PrettyPrinter(
+      lineLength: 100,
+      methodCount: 2,
+      errorMethodCount: 8,
+      colors: true,
+      printEmojis: true,
+    )
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -268,13 +279,16 @@ class _InputFieldState extends State<InputField> {
                             email: _controllerMail.text,
                             password: _controllerPass.text,
                           );
-                          await credential.user!
-                              .updateDisplayName(_controllerUser.text);
-
+                          User? user = credential.user;
+                          if(user != null){
+                            user.updateDisplayName(_controllerUser.text);
+                            await user.reload();
+                            logger.i("User signup: $user");
+                          }
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage(
+                                  builder: (context) => LoadUser(
                                       credential: credential)));
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'weak-password') {

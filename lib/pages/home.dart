@@ -1,8 +1,8 @@
 import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class HomePage extends StatelessWidget {
   final UserCredential credential;
@@ -11,8 +11,29 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? userName = credential.user;
-    userName?.reload();
+    var logger = Logger(
+        printer: PrettyPrinter(
+            lineLength: 100,
+            methodCount: 2,
+            errorMethodCount: 8,
+            colors: true,
+            printEmojis: true));
+
+    String? loginName;
+
+    User? user = credential.user;
+    user?.reload();
+    if (user?.displayName != null) {
+      loginName = user?.displayName;
+      logger.i("user log in: $user");
+    } else {
+      User? signupUser = FirebaseAuth.instance.currentUser;
+      signupUser?.reload();
+      loginName = signupUser?.displayName;
+      logger.i("user just sign up: ${signupUser?.displayName}");
+    }
+    loginName ??= "error name";
+
     double imageEventWidth = (1 / 2) * MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -24,78 +45,6 @@ class HomePage extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: double.infinity,
             fit: BoxFit.cover,
-          ),
-          Positioned(
-            top: 0,
-            child: Container(
-                decoration: BoxDecoration(
-                  image: const DecorationImage(
-                      image: AssetImage('images/background.png'),
-                      fit: BoxFit.fill),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.orange.withOpacity(0.4),
-                        spreadRadius: 4,
-                        blurRadius: 5,
-                        offset: const Offset(0, 2))
-                  ],
-                ),
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 10),
-                      width: 70,
-                      height: 70,
-                      child: const CircleAvatar(
-                        child: Icon(
-                          Icons.account_circle,
-                          size: 60,
-                          color: Color.fromRGBO(255, 255, 255, 0.9),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Hello ${userName?.displayName},",
-                          style: const TextStyle(
-                              fontFamily: 'Poppins', fontSize: 25),
-                        ),
-                        const Text(
-                          "Welcome to Hybrid",
-                          style: TextStyle(fontFamily: 'Poppins', fontSize: 15),
-                        )
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(right: 10),
-                      width: 70,
-                      height: 70,
-                      child: IconButton(
-                          alignment: Alignment.center,
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return const AlertDialog(
-                                      content: Text("Empty Notification"));
-                                });
-                          },
-                          color: const Color.fromRGBO(254, 167, 37, 0.3),
-                          icon: const Icon(
-                            Icons.circle_notifications,
-                            size: 60,
-                          )),
-                    )
-                  ],
-                )),
           ),
           SingleChildScrollView(
             child: Column(
@@ -127,7 +76,7 @@ class HomePage extends StatelessWidget {
                               shape: MaterialStateProperty.all(
                                   RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.circular(20)))),
+                                      BorderRadius.circular(20)))),
                           child: const Text("Logout")),
                     ),
                   ]),
@@ -144,7 +93,7 @@ class HomePage extends StatelessWidget {
                               bottomLeft: Radius.circular(20)),
                           child: CachedNetworkImage(
                             imageUrl:
-                                'https://i.pinimg.com/564x/be/92/e9/be92e978d325698600a3e4eacf1d94e5.jpg',
+                            'https://i.pinimg.com/564x/be/92/e9/be92e978d325698600a3e4eacf1d94e5.jpg',
                             width: double.infinity,
                             height: 200,
                             fit: BoxFit.cover,
@@ -215,7 +164,7 @@ class HomePage extends StatelessWidget {
                         elevation: 8.0,
                         shape: const RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(26))),
+                            BorderRadius.all(Radius.circular(26))),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: Column(
@@ -227,7 +176,7 @@ class HomePage extends StatelessWidget {
                                         Radius.circular(20)),
                                     child: CachedNetworkImage(
                                       imageUrl:
-                                          'https://i.pinimg.com/564x/37/dc/be/37dcbe708a2c8433c6b5f7608301090c.jpg',
+                                      'https://i.pinimg.com/564x/37/dc/be/37dcbe708a2c8433c6b5f7608301090c.jpg',
                                       width: imageEventWidth,
                                       height: 110,
                                       fit: BoxFit.cover,
@@ -239,7 +188,7 @@ class HomePage extends StatelessWidget {
                                     alignment: Alignment.centerLeft,
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      MainAxisAlignment.start,
                                       children: [
                                         const Padding(
                                           padding: EdgeInsets.symmetric(
@@ -254,7 +203,6 @@ class HomePage extends StatelessWidget {
                                                 fontSize: 16),
                                           ),
                                         ),
-
                                         Container(
                                           width: double.infinity,
                                           height: 30,
@@ -263,9 +211,7 @@ class HomePage extends StatelessWidget {
                                           child: Stack(
                                             alignment: Alignment.centerLeft,
                                             children: [
-                                              const SizedBox(
-                                                width: 20
-                                              ),
+                                              const SizedBox(width: 20),
                                               Positioned(
                                                 left: 0,
                                                 child: SizedBox(
@@ -300,15 +246,16 @@ class HomePage extends StatelessWidget {
                                                 ),
                                               ),
                                               Positioned(
-                                                left: 65,
-                                                  child: Text("+${randomUser()} going",
-                                                  style: const TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.indigo
-                                                  ),)
-                                              )
+                                                  left: 65,
+                                                  child: Text(
+                                                    "+${randomUser()} going",
+                                                    style: const TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        color: Colors.indigo),
+                                                  ))
                                             ],
                                           ),
                                         ),
@@ -339,19 +286,19 @@ class HomePage extends StatelessWidget {
                                       width: 200,
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
                                             decoration: const BoxDecoration(
                                                 color: Colors.white70,
                                                 borderRadius: BorderRadius.only(
                                                     topLeft:
-                                                        Radius.circular(20),
+                                                    Radius.circular(20),
                                                     bottomRight:
-                                                        Radius.circular(10))),
+                                                    Radius.circular(10))),
                                             child: Padding(
                                               padding:
-                                                  const EdgeInsets.all(10.0),
+                                              const EdgeInsets.all(10.0),
                                               child: Column(
                                                 children: const [
                                                   Text("10-21",
@@ -359,14 +306,14 @@ class HomePage extends StatelessWidget {
                                                           fontFamily: 'Poppins',
                                                           fontSize: 12,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                          FontWeight.bold,
                                                           color: Colors.red)),
                                                   Text("OPEN",
                                                       style: TextStyle(
                                                           fontFamily: 'Poppins',
                                                           fontSize: 12,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                          FontWeight.bold,
                                                           color: Colors.red))
                                                 ],
                                               ),
@@ -381,15 +328,15 @@ class HomePage extends StatelessWidget {
                                                 color: Colors.white70,
                                                 borderRadius: BorderRadius.only(
                                                     topRight:
-                                                        Radius.circular(20),
+                                                    Radius.circular(20),
                                                     bottomLeft:
-                                                        Radius.circular(10))),
+                                                    Radius.circular(10))),
                                             child: IconButton(
                                                 onPressed: () {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(const SnackBar(
-                                                          content: Text(
-                                                              "Event Saved")));
+                                                      content: Text(
+                                                          "Event Saved")));
                                                 },
                                                 icon: const Icon(
                                                   Icons.bookmark,
@@ -451,7 +398,6 @@ class HomePage extends StatelessWidget {
                                                 fontSize: 16),
                                           ),
                                         ),
-
                                         Container(
                                           width: double.infinity,
                                           height: 30,
@@ -460,9 +406,7 @@ class HomePage extends StatelessWidget {
                                           child: Stack(
                                             alignment: Alignment.centerLeft,
                                             children: [
-                                              const SizedBox(
-                                                  width: 20
-                                              ),
+                                              const SizedBox(width: 20),
                                               Positioned(
                                                 left: 0,
                                                 child: SizedBox(
@@ -498,14 +442,15 @@ class HomePage extends StatelessWidget {
                                               ),
                                               Positioned(
                                                   left: 65,
-                                                  child: Text("+${randomUser()} going",
+                                                  child: Text(
+                                                    "+${randomUser()} going",
                                                     style: const TextStyle(
                                                         fontFamily: 'Poppins',
                                                         fontSize: 12,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.indigo
-                                                    ),)
-                                              )
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        color: Colors.indigo),
+                                                  ))
                                             ],
                                           ),
                                         ),
@@ -648,7 +593,6 @@ class HomePage extends StatelessWidget {
                                                 fontSize: 16),
                                           ),
                                         ),
-
                                         Container(
                                           width: double.infinity,
                                           height: 30,
@@ -657,9 +601,7 @@ class HomePage extends StatelessWidget {
                                           child: Stack(
                                             alignment: Alignment.centerLeft,
                                             children: [
-                                              const SizedBox(
-                                                  width: 20
-                                              ),
+                                              const SizedBox(width: 20),
                                               Positioned(
                                                 left: 0,
                                                 child: SizedBox(
@@ -695,14 +637,15 @@ class HomePage extends StatelessWidget {
                                               ),
                                               Positioned(
                                                   left: 65,
-                                                  child: Text("+${randomUser()} going",
+                                                  child: Text(
+                                                    "+${randomUser()} going",
                                                     style: const TextStyle(
                                                         fontFamily: 'Poppins',
                                                         fontSize: 12,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.indigo
-                                                    ),)
-                                              )
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        color: Colors.indigo),
+                                                  ))
                                             ],
                                           ),
                                         ),
@@ -799,13 +742,690 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                       ),
-
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    "Online Events",
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 22,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                  height: 250,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Card(
+                        margin: const EdgeInsets.only(right: 20, bottom: 10),
+                        color: const Color.fromRGBO(245, 229, 220, 1),
+                        shadowColor: Colors.black45,
+                        elevation: 8.0,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(26))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20)),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                      'https://i.pinimg.com/564x/30/62/3a/30623adcfddc9557449d6a684ed867f5.jpg',
+                                      width: imageEventWidth,
+                                      height: 110,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: imageEventWidth,
+                                    margin: const EdgeInsets.only(top: 120),
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Text(
+                                            "Peluang Karier Sebagai Blockchain Developer",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 30,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Stack(
+                                            alignment: Alignment.centerLeft,
+                                            children: [
+                                              const SizedBox(width: 20),
+                                              Positioned(
+                                                left: 0,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 20,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 40,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                  left: 65,
+                                                  child: Text(
+                                                    "+${randomUser()} going",
+                                                    style: const TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        color: Colors.indigo),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: const [
+                                            Expanded(
+                                                flex: 1,
+                                                child: Icon(
+                                                  Icons.location_on,
+                                                  color: Colors.red,
+                                                  size: 20,
+                                                )),
+                                            Expanded(
+                                              flex: 6,
+                                              child: Text(
+                                                "Online Youtube",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.fade,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      width: 200,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white70,
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                    Radius.circular(20),
+                                                    bottomRight:
+                                                    Radius.circular(10))),
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.all(10.0),
+                                              child: Column(
+                                                children: const [
+                                                  Text("28",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.red)),
+                                                  Text("April",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.red))
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 20, right: 4),
+                                            height: 35,
+                                            width: 35,
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white70,
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                    Radius.circular(20),
+                                                    bottomLeft:
+                                                    Radius.circular(10))),
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                      content: Text(
+                                                          "Event Saved")));
+                                                },
+                                                icon: const Icon(
+                                                  Icons.bookmark,
+                                                  color: Colors.red,
+                                                  size: 17,
+                                                )),
+                                          )
+                                        ],
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Card(
+                        margin: const EdgeInsets.only(right: 20, bottom: 10),
+                        color: const Color.fromRGBO(245, 229, 220, 1),
+                        shadowColor: Colors.black45,
+                        elevation: 8.0,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(26))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20)),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                      'https://i.pinimg.com/564x/5f/44/24/5f4424d79ac7952dae4747a7c967bc74.jpg',
+                                      width: imageEventWidth,
+                                      height: 110,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: imageEventWidth,
+                                    margin: const EdgeInsets.only(top: 120),
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Text(
+                                            "VIRTUAL INTERNATIONAL EDUCATION EXPO 2022",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 30,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Stack(
+                                            alignment: Alignment.centerLeft,
+                                            children: [
+                                              const SizedBox(width: 20),
+                                              Positioned(
+                                                left: 0,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 20,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 40,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                  left: 65,
+                                                  child: Text(
+                                                    "+${randomUser()} going",
+                                                    style: const TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        color: Colors.indigo),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: const [
+                                            Expanded(
+                                                flex: 1,
+                                                child: Icon(
+                                                  Icons.location_on,
+                                                  color: Colors.red,
+                                                  size: 20,
+                                                )),
+                                            Expanded(
+                                              flex: 6,
+                                              child: Text(
+                                                "Online GMeet",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.fade,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      width: 200,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white70,
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                    Radius.circular(20),
+                                                    bottomRight:
+                                                    Radius.circular(10))),
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.all(10.0),
+                                              child: Column(
+                                                children: const [
+                                                  Text("21-22",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.red)),
+                                                  Text("MEI",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.red))
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 20, right: 4),
+                                            height: 35,
+                                            width: 35,
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white70,
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                    Radius.circular(20),
+                                                    bottomLeft:
+                                                    Radius.circular(10))),
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                      content: Text(
+                                                          "Event Saved")));
+                                                },
+                                                icon: const Icon(
+                                                  Icons.bookmark,
+                                                  color: Colors.red,
+                                                  size: 17,
+                                                )),
+                                          )
+                                        ],
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Card(
+                        margin: const EdgeInsets.only(right: 20, bottom: 10),
+                        color: const Color.fromRGBO(245, 229, 220, 1),
+                        shadowColor: Colors.black45,
+                        elevation: 8.0,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(26))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20)),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                      'https://i.pinimg.com/564x/7d/69/66/7d6966d850e66adc15ca3d132ce183b7.jpg',
+                                      width: imageEventWidth,
+                                      height: 110,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: imageEventWidth,
+                                    margin: const EdgeInsets.only(top: 120),
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Text(
+                                            "Understanding the Importance of UIUX for Digital Startup Products",
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 30,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Stack(
+                                            alignment: Alignment.centerLeft,
+                                            children: [
+                                              const SizedBox(width: 20),
+                                              Positioned(
+                                                left: 0,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 20,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 40,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                  left: 65,
+                                                  child: Text(
+                                                    "+${randomUser()} going",
+                                                    style: const TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        color: Colors.indigo),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: const [
+                                            Expanded(
+                                                flex: 1,
+                                                child: Icon(
+                                                  Icons.location_on,
+                                                  color: Colors.red,
+                                                  size: 20,
+                                                )),
+                                            Expanded(
+                                              flex: 6,
+                                              child: Text(
+                                                "Online Zoom",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.fade,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      width: 200,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white70,
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                    Radius.circular(20),
+                                                    bottomRight:
+                                                    Radius.circular(10))),
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.all(10.0),
+                                              child: Column(
+                                                children: const [
+                                                  Text("13",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.red)),
+                                                  Text("Mei",
+                                                      style: TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                          FontWeight.bold,
+                                                          color: Colors.red))
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 20, right: 4),
+                                            height: 35,
+                                            width: 35,
+                                            decoration: const BoxDecoration(
+                                                color: Colors.white70,
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                    Radius.circular(20),
+                                                    bottomLeft:
+                                                    Radius.circular(10))),
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                      content: Text(
+                                                          "Event Saved")));
+                                                },
+                                                icon: const Icon(
+                                                  Icons.bookmark,
+                                                  color: Colors.red,
+                                                  size: 17,
+                                                )),
+                                          )
+                                        ],
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 )
               ],
             ),
           ),
+          Positioned(
+            top: 0,
+            child: Container(
+                decoration: BoxDecoration(
+                  image: const DecorationImage(
+                      image: AssetImage('images/background.png'),
+                      fit: BoxFit.cover),
+                  color: const Color.fromRGBO(245, 229, 220, 1),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black26.withOpacity(0.1),
+                        spreadRadius: 4,
+                        blurRadius: 5,
+                        offset: const Offset(0, 2))
+                  ],
+                ),
+                width: MediaQuery.of(context).size.width,
+                height: 100,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 10),
+                      width: 70,
+                      height: 70,
+                      child: const CircleAvatar(
+                        child: Icon(
+                          Icons.account_circle,
+                          size: 60,
+                          color: Color.fromRGBO(255, 255, 255, 0.9),
+                        ),
+                      ),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Hello ${capitalize(loginName)},",
+                          style: const TextStyle(
+                              fontFamily: 'Poppins', fontSize: 25),
+                        ),
+                        const Text(
+                          "Welcome to Hybrid",
+                          style: TextStyle(fontFamily: 'Poppins', fontSize: 15),
+                        )
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(right: 10),
+                      width: 70,
+                      height: 70,
+                      child: IconButton(
+                          alignment: Alignment.center,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const AlertDialog(
+                                      content: Text("Empty Notification"));
+                                });
+                          },
+                          color: const Color.fromRGBO(254, 167, 37, 0.3),
+                          icon: const Icon(
+                            Icons.circle_notifications,
+                            size: 60,
+                          )),
+                    )
+                  ],
+                )),
+          ),
+
         ],
       )),
     );
@@ -814,5 +1434,9 @@ class HomePage extends StatelessWidget {
   randomUser() {
     Random random = Random();
     return random.nextInt(100);
+  }
+
+  String? capitalize(String loginName) {
+    return loginName[0].toUpperCase() + loginName.substring(1).toLowerCase();
   }
 }

@@ -5,9 +5,7 @@ import 'package:hybrd_app/onboarding/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MainHybrd());
 }
 
@@ -17,9 +15,8 @@ class MainHybrd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Hybrd",
-      theme: ThemeData(primarySwatch: Colors.orange),
-      home: const SplashLogo()
-    );
+        title: "Hybrd",
+        theme: ThemeData(primarySwatch: Colors.orange),
+        home: const SplashLogo());
   }
 }
