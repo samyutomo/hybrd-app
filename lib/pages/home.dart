@@ -5,10 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:hybrd_app/models/hybrid_events.dart';
 import 'package:logger/logger.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final UserCredential credential;
 
   const HomePage({Key? key, required this.credential}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String? loginName = "fellas";
 
   @override
   Widget build(BuildContext context) {
@@ -20,25 +27,31 @@ class HomePage extends StatelessWidget {
             colors: true,
             printEmojis: true));
 
-    String? loginName;
-
-    User? user = credential.user;
-    user?.reload();
-    if (user?.displayName != null) {
-      loginName = user?.displayName;
-      logger.i("user log in: $user");
+    User? signinUser = widget.credential.user;
+    signinUser?.reload();
+    if (signinUser?.displayName != null) {
+      loginName = signinUser?.displayName;
+      logger.i("user log in: $loginName");
     } else {
       User? signupUser = FirebaseAuth.instance.currentUser;
       signupUser?.reload();
       loginName = signupUser?.displayName;
-      logger.i("user just sign up: ${signupUser?.displayName}");
+      logger.i("user sign up: $loginName");
+      if(loginName == null) {
+        Future.delayed(const Duration(seconds: 5), () {
+          setState(() {
+            logger.i("user delay sign up: $loginName");
+          });
+        });
+      }
     }
-    loginName ??= "error name";
+    loginName ??= "morning..";
+    logger.i("update display name: $loginName");
 
     double imageEventWidth = (1 / 2) * MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: SafeArea(
+       body: SafeArea(
           child: Stack(
         children: [
           Image.asset(
@@ -168,7 +181,7 @@ class HomePage extends StatelessWidget {
                           elevation: 8.0,
                           shape: const RoundedRectangleBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(26))),
+                                  BorderRadius.all(Radius.circular(26))),
                           child: Padding(
                             padding: const EdgeInsets.all(14.0),
                             child: Column(
@@ -181,8 +194,7 @@ class HomePage extends StatelessWidget {
                                       child: Hero(
                                         tag: event.tag,
                                         child: CachedNetworkImage(
-                                          imageUrl:
-                                          event.imageAsset,
+                                          imageUrl: event.imageAsset,
                                           width: imageEventWidth,
                                           height: 110,
                                           fit: BoxFit.cover,
@@ -195,7 +207,7 @@ class HomePage extends StatelessWidget {
                                       alignment: Alignment.centerLeft,
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -260,7 +272,7 @@ class HomePage extends StatelessWidget {
                                                           fontFamily: 'Poppins',
                                                           fontSize: 12,
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                           color: Colors.indigo),
                                                     ))
                                               ],
@@ -293,39 +305,39 @@ class HomePage extends StatelessWidget {
                                         width: 200,
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               decoration: const BoxDecoration(
                                                   color: Colors.white70,
                                                   borderRadius:
-                                                  BorderRadius.only(
-                                                      topLeft:
-                                                      Radius.circular(
-                                                          20),
-                                                      bottomRight:
-                                                      Radius.circular(
-                                                          10))),
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  20),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  10))),
                                               child: Padding(
                                                 padding:
-                                                const EdgeInsets.all(10.0),
+                                                    const EdgeInsets.all(10.0),
                                                 child: Column(
                                                   children: [
                                                     Text(event.hour,
                                                         style: const TextStyle(
                                                             fontFamily:
-                                                            'Poppins',
+                                                                'Poppins',
                                                             fontSize: 12,
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             color: Colors.red)),
                                                     Text(event.date,
                                                         style: const TextStyle(
                                                             fontFamily:
-                                                            'Poppins',
+                                                                'Poppins',
                                                             fontSize: 12,
                                                             fontWeight:
-                                                            FontWeight.bold,
+                                                                FontWeight.bold,
                                                             color: Colors.red))
                                                   ],
                                                 ),
@@ -339,21 +351,21 @@ class HomePage extends StatelessWidget {
                                               decoration: const BoxDecoration(
                                                   color: Colors.white70,
                                                   borderRadius:
-                                                  BorderRadius.only(
-                                                      topRight:
-                                                      Radius.circular(
-                                                          20),
-                                                      bottomLeft:
-                                                      Radius.circular(
-                                                          10))),
+                                                      BorderRadius.only(
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  20),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  10))),
                                               child: IconButton(
                                                   onPressed: () {
                                                     ScaffoldMessenger.of(
-                                                        context)
+                                                            context)
                                                         .showSnackBar(
-                                                        const SnackBar(
-                                                            content: Text(
-                                                                "Event Saved")));
+                                                            const SnackBar(
+                                                                content: Text(
+                                                                    "Event Saved")));
                                                   },
                                                   icon: const Icon(
                                                     Icons.bookmark,
@@ -414,9 +426,8 @@ class HomePage extends StatelessWidget {
                                           Radius.circular(20)),
                                       child: Hero(
                                         tag: event.tag,
-                                        child: CachedNetworkImage( 
-                                          imageUrl:
-                                              event.imageAsset,
+                                        child: CachedNetworkImage(
+                                          imageUrl: event.imageAsset,
                                           width: imageEventWidth,
                                           height: 110,
                                           fit: BoxFit.cover,
@@ -634,51 +645,62 @@ class HomePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 10),
-                      width: 70,
-                      height: 70,
-                      child: const CircleAvatar(
-                        child: Icon(
-                          Icons.account_circle,
-                          size: 60,
-                          color: Color.fromRGBO(255, 255, 255, 0.9),
+                    const Expanded(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 60,
+                        child: CircleAvatar(
+                          child: Icon(
+                            Icons.account_circle,
+                            size: 60,
+                            color: Color.fromRGBO(255, 255, 255, 0.9),
+                          ),
                         ),
                       ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Hello ${capitalize(loginName)},",
-                          style: const TextStyle(
-                              fontFamily: 'Poppins', fontSize: 25),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Hi ${capitalize(loginName!)}",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 25),
+                            ),
+                            const Text(
+                              "Welcome to Hybrid!",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins', fontSize: 15),
+                            )
+                          ],
                         ),
-                        const Text(
-                          "Welcome to Hybrid",
-                          style: TextStyle(fontFamily: 'Poppins', fontSize: 15),
-                        )
-                      ],
+                      ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(right: 10),
-                      width: 70,
-                      height: 70,
-                      child: IconButton(
-                          alignment: Alignment.center,
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return const AlertDialog(
-                                      content: Text("Empty Notification"));
-                                });
-                          },
-                          color: const Color.fromRGBO(254, 167, 37, 0.3),
-                          icon: const Icon(
-                            Icons.circle_notifications,
-                            size: 60,
-                          )),
+                    Expanded(
+                      flex: 1,
+                      child: SizedBox(
+                        height: 70,
+                        child: IconButton(
+                            alignment: Alignment.center,
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const AlertDialog(
+                                        content: Text("Empty Notification"));
+                                  });
+                            },
+                            color: const Color.fromRGBO(254, 167, 37, 0.3),
+                            icon: const Icon(
+                              Icons.circle_notifications,
+                              size: 60,
+                            )),
+                      ),
                     )
                   ],
                 )),
