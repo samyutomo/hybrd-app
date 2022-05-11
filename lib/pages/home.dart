@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hybrd_app/models/hybrid_events.dart';
+import 'package:hybrd_app/pages/brief_description.dart';
 import 'package:logger/logger.dart';
 
 class HomePage extends StatefulWidget {
@@ -173,7 +174,325 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (BuildContext context, int index) {
                       HybridEvent event = onsiteEventList[index];
                       return InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              elevation: 7.0,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.white,
+                              constraints: BoxConstraints(
+                                  maxWidth: MediaQuery.of(context).size.width - 20,
+                                  maxHeight: MediaQuery.of(context).size.height - 100),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(24.0),
+                                      topRight: Radius.circular(24.0))),
+                              builder: (context) {
+                                return Container(
+                                  height: 700,
+                                  padding: const EdgeInsets.only(top: 3),
+                                  child: Column(
+                                    children: [
+                                      Stack(
+                                          alignment: AlignmentDirectional.topCenter,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: const BorderRadius.only(
+                                                  topLeft: Radius.circular(20),
+                                                  topRight: Radius.circular(20)),
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                event.imageAsset,
+                                                width: MediaQuery.of(context).size.width - 25,
+                                                height: 300,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            const Positioned(
+                                              top: -20.0,
+                                              child: SizedBox(
+                                                  child: Icon(
+                                                    Icons.minimize,
+                                                    size: 50,
+                                                    color: Colors.white,
+                                                  )),
+                                            ),
+                                          ]),
+                                      Container(
+                                        height: 50,
+                                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                flex: 4,
+                                                child: Text(
+                                                  event.name,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold),
+                                                )),
+                                            Expanded(
+                                                flex: 1,
+                                                child: IconButton(
+                                                    onPressed: () {},
+                                                    icon: const Icon(Icons.share))),
+                                            Expanded(
+                                                flex: 1,
+                                                child: IconButton(
+                                                    onPressed: () {},
+                                                    icon: const Icon(
+                                                      Icons.bookmark,
+                                                      size: 30,
+                                                    )))
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Stack(
+                                          alignment: Alignment.topLeft,
+                                          children: [
+                                            const SizedBox(width: 20),
+                                            Positioned(
+                                              left: 0,
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 20,
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 40,
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                                left: 70,
+                                                child: Text(
+                                                  "+${randomUser()} going",
+                                                  style: const TextStyle(
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.bold,
+                                                      color:
+                                                      Color.fromRGBO(16, 141, 232, 1.0)),
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: SingleChildScrollView(
+                                          padding: const EdgeInsets.only(bottom: 30),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                width: double.infinity,
+                                                height: 50,
+                                                margin: const EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                        flex: 3,
+                                                        child: Row(
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.place,
+                                                              color: Colors.red,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            Expanded(
+                                                              child: Text(
+                                                                event.hybrid,
+                                                                maxLines: 1,
+                                                                overflow: TextOverflow.ellipsis,
+                                                                style: const TextStyle(
+                                                                    fontFamily: 'Poppins',
+                                                                    fontWeight:
+                                                                    FontWeight.bold),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        )),
+                                                    const Expanded(
+                                                        flex: 1, child: Icon(Icons.abc))
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 50,
+                                                margin: const EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.date_range,
+                                                      color:
+                                                      Color.fromRGBO(16, 141, 232, 1.0),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          event.date,
+                                                          style: const TextStyle(
+                                                              fontFamily: 'Poppins',
+                                                              fontWeight: FontWeight.bold),
+                                                        ),
+                                                        Text(
+                                                          event.hour,
+                                                          style: const TextStyle(
+                                                              fontFamily: 'Poppins'),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 50,
+                                                margin: const EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.favorite,
+                                                      color: Colors.red,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Text(
+                                                      event.type,
+                                                      style: const TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          color: Colors.orange),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 30,
+                                                margin: const EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                        flex: 2,
+                                                        child: Row(
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.sell,
+                                                              color: Color.fromRGBO(
+                                                                  16, 141, 232, 1.0),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            Text(
+                                                              event.price,
+                                                              style: const TextStyle(
+                                                                  fontFamily: 'Poppins',
+                                                                  fontWeight:
+                                                                  FontWeight.bold),
+                                                            )
+                                                          ],
+                                                        )),
+                                                    Expanded(
+                                                        flex: 1,
+                                                        child: ElevatedButton(
+                                                          onPressed: () {
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (context) =>
+                                                                const AlertDialog(
+                                                                  content: Text(
+                                                                      "Ticket SOLD!"),
+                                                                ));
+                                                          },
+                                                          child: const Text(
+                                                            "Buy Ticket",
+                                                            style: TextStyle(
+                                                                color: Colors.white),
+                                                          ),
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                              MaterialStateProperty.all(
+                                                                  const Color.fromRGBO(
+                                                                      16, 141, 232, 1.0)),
+                                                              shape:
+                                                              MaterialStateProperty.all(
+                                                                  RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                          20)))),
+                                                        ))
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Container(
+                                                  width: double.infinity,
+                                                  height: 50,
+                                                  alignment: Alignment.centerLeft,
+                                                  margin: const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                                  child: const Text(
+                                                    "About Event",
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 15,
+                                                        fontWeight: FontWeight.bold),
+                                                  )),
+                                              BriefDescription(description: event.description),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                        },
                         child: Card(
                           margin: const EdgeInsets.only(right: 20, bottom: 10),
                           color: const Color.fromRGBO(245, 229, 220, 1),
@@ -406,7 +725,323 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (BuildContext context, int index) {
                       HybridEvent event = onlineEventList[index];
                       return InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              elevation: 7.0,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.white,
+                              constraints: BoxConstraints(
+                                  maxWidth: MediaQuery.of(context).size.width - 20,
+                                  maxHeight: MediaQuery.of(context).size.height - 100),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(24.0),
+                                      topRight: Radius.circular(24.0))),
+                              builder: (context) {
+                                return Container(
+                                  height: 700,
+                                  padding: const EdgeInsets.only(top: 3),
+                                  child: Column(
+                                    children: [
+                                      Stack(
+                                          alignment: AlignmentDirectional.topCenter,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: const BorderRadius.only(
+                                                  topLeft: Radius.circular(20),
+                                                  topRight: Radius.circular(20)),
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                event.imageAsset,
+                                                width: MediaQuery.of(context).size.width - 25,
+                                                height: 300,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            const Positioned(
+                                              top: -20.0,
+                                              child: SizedBox(
+                                                  child: Icon(
+                                                    Icons.minimize,
+                                                    size: 50,
+                                                    color: Colors.white,
+                                                  )),
+                                            ),
+                                          ]),
+                                      Container(
+                                        height: 50,
+                                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                flex: 4,
+                                                child: Text(
+                                                  event.name,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold),
+                                                )),
+                                            Expanded(
+                                                flex: 1,
+                                                child: IconButton(
+                                                    onPressed: () {},
+                                                    icon: const Icon(Icons.share))),
+                                            Expanded(
+                                                flex: 1,
+                                                child: IconButton(
+                                                    onPressed: () {},
+                                                    icon: const Icon(
+                                                      Icons.bookmark,
+                                                      size: 30,
+                                                    )))
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                                        child: Stack(
+                                          alignment: Alignment.topLeft,
+                                          children: [
+                                            const SizedBox(width: 20),
+                                            Positioned(
+                                              left: 0,
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 20,
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 40,
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                                left: 70,
+                                                child: Text(
+                                                  "+${randomUser()} going",
+                                                  style: const TextStyle(
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.bold,
+                                                      color:
+                                                      Color.fromRGBO(16, 141, 232, 1.0)),
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: SingleChildScrollView(
+                                          padding: const EdgeInsets.only(bottom: 30),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                width: double.infinity,
+                                                height: 50,
+                                                margin: const EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                        flex: 2,
+                                                        child: Row(
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.place,
+                                                              color: Colors.red,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            Text(
+                                                              event.hybrid,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                              style: const TextStyle(
+                                                                  fontFamily: 'Poppins',
+                                                                  fontWeight:
+                                                                  FontWeight.bold),
+                                                            )
+                                                          ],
+                                                        )),
+                                                    const Expanded(
+                                                        flex: 1, child: Icon(Icons.abc))
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 50,
+                                                margin: const EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.date_range,
+                                                      color:
+                                                      Color.fromRGBO(16, 141, 232, 1.0),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          event.date,
+                                                          style: const TextStyle(
+                                                              fontFamily: 'Poppins',
+                                                              fontWeight: FontWeight.bold),
+                                                        ),
+                                                        Text(
+                                                          event.hour,
+                                                          style: const TextStyle(
+                                                              fontFamily: 'Poppins'),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 50,
+                                                margin: const EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.favorite,
+                                                      color: Colors.red,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    Text(
+                                                      event.type,
+                                                      style: const TextStyle(
+                                                          fontFamily: 'Poppins',
+                                                          color: Colors.orange),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 30,
+                                                margin: const EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                        flex: 2,
+                                                        child: Row(
+                                                          children: [
+                                                            const Icon(
+                                                              Icons.sell,
+                                                              color: Color.fromRGBO(
+                                                                  16, 141, 232, 1.0),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            Text(
+                                                              event.price,
+                                                              style: const TextStyle(
+                                                                  fontFamily: 'Poppins',
+                                                                  fontWeight:
+                                                                  FontWeight.bold),
+                                                            )
+                                                          ],
+                                                        )),
+                                                    Expanded(
+                                                        flex: 1,
+                                                        child: ElevatedButton(
+                                                          onPressed: () {
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (context) =>
+                                                                const AlertDialog(
+                                                                  content: Text(
+                                                                      "Ticket SOLD!"),
+                                                                ));
+                                                          },
+                                                          child: const Text(
+                                                            "Buy Ticket",
+                                                            style: TextStyle(
+                                                                color: Colors.white),
+                                                          ),
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                              MaterialStateProperty.all(
+                                                                  const Color.fromRGBO(
+                                                                      16, 141, 232, 1.0)),
+                                                              shape:
+                                                              MaterialStateProperty.all(
+                                                                  RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                          20)))),
+                                                        ))
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Container(
+                                                  width: double.infinity,
+                                                  height: 50,
+                                                  alignment: Alignment.centerLeft,
+                                                  margin: const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                                  child: const Text(
+                                                    "About Event",
+                                                    style: TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 15,
+                                                        fontWeight: FontWeight.bold),
+                                                  )),
+                                              BriefDescription(description: event.description),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                        },
                         child: Card(
                           margin: const EdgeInsets.only(right: 20, bottom: 10),
                           color: const Color.fromRGBO(245, 229, 220, 1),
@@ -461,55 +1096,55 @@ class _HomePageState extends State<HomePage> {
                                             margin: const EdgeInsets.symmetric(
                                                 horizontal: 10),
                                             child: Stack(
-                                              alignment: Alignment.centerLeft,
-                                              children: [
-                                                const SizedBox(width: 20),
-                                                Positioned(
-                                                  left: 0,
-                                                  child: SizedBox(
-                                                    width: 20,
-                                                    height: 20,
-                                                    child: CircleAvatar(
-                                                      backgroundImage: NetworkImage(
-                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                    ),
+                                            alignment: Alignment.centerLeft,
+                                            children: [
+                                              const SizedBox(width: 20),
+                                              Positioned(
+                                                left: 0,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
                                                   ),
                                                 ),
-                                                Positioned(
-                                                  left: 20,
-                                                  child: SizedBox(
-                                                    width: 20,
-                                                    height: 20,
-                                                    child: CircleAvatar(
-                                                      backgroundImage: NetworkImage(
-                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                    ),
+                                              ),
+                                              Positioned(
+                                                left: 20,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
                                                   ),
                                                 ),
-                                                Positioned(
-                                                  left: 40,
-                                                  child: SizedBox(
-                                                    width: 20,
-                                                    height: 20,
-                                                    child: CircleAvatar(
-                                                      backgroundImage: NetworkImage(
-                                                          'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
-                                                    ),
+                                              ),
+                                              Positioned(
+                                                left: 40,
+                                                child: SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        'https://randomuser.me/api/portraits/men/${randomUser()}.jpg'),
                                                   ),
                                                 ),
-                                                Positioned(
-                                                    left: 65,
-                                                    child: Text(
-                                                      "+${randomUser()} going",
-                                                      style: const TextStyle(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.indigo),
-                                                    ))
-                                              ],
-                                            ),
+                                              ),
+                                              Positioned(
+                                                  left: 65,
+                                                  child: Text(
+                                                    "+${randomUser()} going",
+                                                    style: const TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        color: Colors.indigo),
+                                                  ))
+                                            ],
+                                          ),
                                           ),
                                           const SizedBox(height: 10),
                                           Row(
