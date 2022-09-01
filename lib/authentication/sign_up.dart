@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hybrd_app/authentication/sign_in.dart';
+import 'package:hybrd_app/notification/snackbar_dialog.dart';
 import 'package:hybrd_app/pages/home.dart';
 import 'package:logger/logger.dart';
 
@@ -93,8 +94,8 @@ class InputField extends StatefulWidget {
 }
 
 class _InputFieldState extends State<InputField> {
-  bool _hidePassword = true;
-  bool _agreeTerm = false;
+  bool _isPassObscured = true;
+  bool _isTermChecked = false;
   final TextEditingController _controllerUser = TextEditingController();
   final TextEditingController _controllerGen = TextEditingController();
   final TextEditingController _controllerMail = TextEditingController();
@@ -164,6 +165,7 @@ class _InputFieldState extends State<InputField> {
               }
             },
             controller: _controllerGen,
+            readOnly: true,
             decoration: InputDecoration(
                 suffixIcon: PopupMenuButton(
                   icon: const Icon(Icons.arrow_drop_down),
@@ -229,15 +231,15 @@ class _InputFieldState extends State<InputField> {
                 }
               },
               controller: _controllerPass,
-              obscureText: _hidePassword,
+              obscureText: _isPassObscured,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
-                        _hidePassword = !_hidePassword;
+                        _isPassObscured = !_isPassObscured;
                       });
                     },
-                    icon: Icon(_hidePassword
+                    icon: Icon(_isPassObscured
                         ? Icons.visibility_off
                         : Icons.visibility)),
                 hintText: "Input Password",
@@ -256,10 +258,10 @@ class _InputFieldState extends State<InputField> {
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: ListTile(
             leading: Checkbox(
-                value: _agreeTerm,
+                value: _isTermChecked,
                 onChanged: (bool? value) {
                   setState(() {
-                    _agreeTerm = value!;
+                    _isTermChecked = value!;
                   });
                 }),
             title: const Text("I accept the terms and privacy policy"),
@@ -268,12 +270,11 @@ class _InputFieldState extends State<InputField> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: ElevatedButton(
-              onPressed: _agreeTerm
+              onPressed: _isTermChecked
                   ? () async {
                       if (_formKey.currentState!.validate()) {
                         try {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Registering to home...")));
+                          notifSnackBar(context, "Registering to home...");
                           var credential = await FirebaseAuth.instance
                               .createUserWithEmailAndPassword(
                             email: _controllerMail.text,
@@ -295,24 +296,20 @@ class _InputFieldState extends State<InputField> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return const AlertDialog(
-                                      content:
-                                          Text("Your password is too weak"));
+                                  return const NotifDialog(information: "Your password is too weak");
                                 });
                           } else if (e.code == 'email-already-in-use') {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return const AlertDialog(
-                                      content: Text(
-                                          "The account already exists for that email"));
+                                  return const NotifDialog(information: "The account already exists for that email");
                                 });
                           }
                         } catch (e) {
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return AlertDialog(content: Text(e.toString()));
+                                return NotifDialog(information: e.toString());
                               });
                         }
                       }
