@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:hybrd_app/pages/event_registration.dart';
+import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,7 @@ import 'package:hybrd_app/pages/brief_description.dart';
 import 'package:logger/logger.dart';
 
 class HomePage extends StatefulWidget {
-  final UserCredential credential;
+  final UserCredential? credential;
 
   const HomePage({Key? key, required this.credential}) : super(key: key);
 
@@ -28,7 +30,7 @@ class _HomePageState extends State<HomePage> {
             colors: true,
             printEmojis: true));
 
-    User? signinUser = widget.credential.user;
+    User? signinUser = widget.credential?.user;
     signinUser?.reload();
     if (signinUser?.displayName != null) {
       loginName = signinUser?.displayName;
@@ -428,7 +430,7 @@ class _HomePageState extends State<HomePage> {
                                                               width: 20,
                                                             ),
                                                             Text(
-                                                              event.price,
+                                                              priceToString(event.price),
                                                               style: const TextStyle(
                                                                   fontFamily: 'Poppins',
                                                                   fontWeight:
@@ -440,13 +442,9 @@ class _HomePageState extends State<HomePage> {
                                                         flex: 1,
                                                         child: ElevatedButton(
                                                           onPressed: () {
-                                                            showDialog(
-                                                                context: context,
-                                                                builder: (context) =>
-                                                                const AlertDialog(
-                                                                  content: Text(
-                                                                      "Ticket SOLD!"),
-                                                                ));
+                                                            Navigator.push(context,
+                                                                MaterialPageRoute(builder: (context) => EventRegister(chosenEvent: event)),
+                                                            );
                                                           },
                                                           child: const Text(
                                                             "Buy Ticket",
@@ -977,7 +975,7 @@ class _HomePageState extends State<HomePage> {
                                                               width: 20,
                                                             ),
                                                             Text(
-                                                              event.price,
+                                                              priceToString(event.price),
                                                               style: const TextStyle(
                                                                   fontFamily: 'Poppins',
                                                                   fontWeight:
@@ -989,13 +987,10 @@ class _HomePageState extends State<HomePage> {
                                                         flex: 1,
                                                         child: ElevatedButton(
                                                           onPressed: () {
-                                                            showDialog(
-                                                                context: context,
-                                                                builder: (context) =>
-                                                                const AlertDialog(
-                                                                  content: Text(
-                                                                      "Ticket SOLD!"),
-                                                                ));
+                                                            Navigator.push(context,
+                                                                MaterialPageRoute(builder: (context)=> EventRegister(chosenEvent: event),
+                                                                ),
+                                                            );
                                                           },
                                                           child: const Text(
                                                             "Buy Ticket",
@@ -1296,7 +1291,7 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       flex: 2,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -1305,7 +1300,7 @@ class _HomePageState extends State<HomePage> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                  fontFamily: 'Poppins', fontSize: 25),
+                                  fontFamily: 'Poppins', fontSize: 22),
                             ),
                             const Text(
                               "Welcome to Hybrid!",
@@ -1352,5 +1347,16 @@ class _HomePageState extends State<HomePage> {
 
   String? capitalize(String loginName) {
     return loginName[0].toUpperCase() + loginName.substring(1).toLowerCase();
+  }
+
+  String priceToString(int price){
+    var formatter = NumberFormat('#,###.0#');
+    String formattedPrice;
+    if(price < 1 ){
+      formattedPrice = "0";
+    }else {
+      formattedPrice = formatter.format(price);
+    }
+    return "Rp $formattedPrice";
   }
 }

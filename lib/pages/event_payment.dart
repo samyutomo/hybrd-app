@@ -1,11 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hybrd_app/pages/home.dart';
+import 'package:intl/intl.dart';
 
 class EventPayment extends StatelessWidget {
   const EventPayment({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final dateFormat = DateFormat('d MMM yyyy HH:mm:ss');
+    final todayDate = dateFormat.format(now);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -18,7 +23,7 @@ class EventPayment extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          SizedBox(
+          const SizedBox(
             height: double.infinity,
           ),
           Container(
@@ -26,7 +31,7 @@ class EventPayment extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: 250,
             child: Column(
-              children: [
+              children: const [
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0),
                   child: Icon(
@@ -56,7 +61,7 @@ class EventPayment extends StatelessWidget {
               child: Container(
                 width: MediaQuery.of(context).size.width - 40,
                 height: 300,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(12),
                     ),
@@ -74,7 +79,7 @@ class EventPayment extends StatelessWidget {
                           horizontal: 20.0, vertical: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: const [
                           Text(
                             "Rp 15.000",
                             style: TextStyle(
@@ -91,7 +96,7 @@ class EventPayment extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 1.0,
                       color: Colors.grey,
                     ),
@@ -101,7 +106,7 @@ class EventPayment extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               "Order Info",
                               style:
@@ -122,11 +127,11 @@ class EventPayment extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             Text(
                               "Amount",
                               style:
-                              TextStyle(color: Colors.grey, fontSize: 14),
+                                  TextStyle(color: Colors.grey, fontSize: 14),
                             ),
                             Text(
                               "Rp 15.000",
@@ -144,14 +149,14 @@ class EventPayment extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               "Transaction Time",
                               style:
-                              TextStyle(color: Colors.grey, fontSize: 14),
+                                  TextStyle(color: Colors.grey, fontSize: 14),
                             ),
                             Text(
-                              "10 Dec 2021 12:11:10",
-                              style: TextStyle(
+                              todayDate,
+                              style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             )
                           ],
@@ -171,7 +176,14 @@ class EventPayment extends StatelessWidget {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(credential: null),
+                      ),
+                    );
+                  },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.blue),
                     shape: MaterialStateProperty.all(
