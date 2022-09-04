@@ -29,12 +29,14 @@ class EventDatabase {
     await db.execute('''
     CREATE TABLE $tableEvents(
       _id INTEGER PRIMARY KEY AUTOINCREMENT,
+      orderId TEXT NOT NULL,
       ticketId TEXT NOT NULL,
       eventName TEXT NOT NULL,
       buyerName TEXT NOT NULL,
       chosenDate TEXT NOT NULL,
       chosenTime TEXT NOT NULL,
       link TEXT NOT NULL,
+      idImg INTEGER NOT NULL,
       isOnline BOOLEAN NOT NULL,
       time TEXT NOT NULL
     ) 
@@ -56,12 +58,14 @@ class EventDatabase {
       tableEvents,
       columns: [
         '_id',
+        'orderId',
         'ticketId',
         'eventName',
         'buyerName',
         'chosenDate',
         'chosenTime',
         'link',
+        'idImg',
         'isOnline',
         'time'
       ],
@@ -70,15 +74,19 @@ class EventDatabase {
     );
     if (maps.first.isNotEmpty) {
       return ScheduledEvent(
-          id: ['_id'] as int,
-          ticketId: ['ticketId'] as String,
-          eventName: ['eventName'] as String,
-          buyerName: ['buyerName'] as String,
-          chosenDate: ['chosenDate'] as String,
-          chosenTime: ['chosenTime'] as String,
-          link: ['link'] as String,
-          isOnline: ['isOnline'] as bool,
-          time: ['time'] as DateTime);
+          id: maps.first['_id'] as int,
+          orderId: maps.first['orderId'] as String,
+          ticketId: maps.first['ticketId'] as String,
+          eventName: maps.first['eventName'] as String,
+          buyerName: maps.first['buyerName'] as String,
+          chosenDate: maps.first['chosenDate'] as String,
+          chosenTime: maps.first['chosenTime'] as String,
+          link: maps.first['link'] as String,
+          idImg: maps.first['idImg'] as int,
+          price: '',
+          isOnline: maps.first['isOnline'] == 1,
+          time: DateTime.parse(maps.first['time'] as String),
+      );
     }else{
       throw Exception("ID: $id not found");
     }
@@ -88,21 +96,26 @@ class EventDatabase {
   Future<List<ScheduledEvent>> listAllEvents() async {
     final db = await instance.database;
 
-    final List<Map<String, Object?>> maps = await db.query(tableEvents);
+    final List<Map<String, dynamic>> maps = await db.query(tableEvents);
 
-    return List.generate(maps.length, (index) {
+    final result = List.generate(maps.length, (index) {
       return ScheduledEvent(
-        id: maps[index]['_id'] as int,
-        ticketId: maps[index]['ticketId'] as String,
-        eventName: maps[index]['eventName'] as String,
-        buyerName: maps[index]['buyerName'] as String,
-        chosenDate: maps[index]['chosenDate'] as String,
-        chosenTime: maps[index]['chosenTime'] as String,
-        link: maps[index]['link'] as String,
-        isOnline: maps[index]['isOnline'] as bool,
-        time: maps[index]['time'] as DateTime,
+        id: maps[index]['_id'],
+        orderId: maps[index]['orderId'],
+        ticketId: maps[index]['ticketId'],
+        eventName: maps[index]['eventName'],
+        buyerName: maps[index]['buyerName'],
+        chosenDate: maps[index]['chosenDate'],
+        chosenTime: maps[index]['chosenTime'],
+        link: maps[index]['link'],
+        idImg: maps[index]['idImg'],
+        price: '',
+        isOnline: maps[index]['isOnline'] == 1,
+        time: DateTime.parse(maps[index]['time'] as String),
       );
     });
+    // print(result);
+    return result;
   }
 
   Future close() async {
