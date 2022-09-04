@@ -1,15 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:hybrd_app/pages/home.dart';
+import 'package:hybrd_app/database/event_database.dart';
+import 'package:hybrd_app/models/schedule_event.dart';
+import 'package:hybrd_app/navigation/bottom_navigation.dart';
+import 'package:hybrd_app/notification/snackbar_dialog.dart';
 import 'package:intl/intl.dart';
 
-class EventPayment extends StatelessWidget {
-  const EventPayment({Key? key}) : super(key: key);
+class EventPayment extends StatefulWidget {
+  final ScheduledEvent chosenEvent;
+
+  const EventPayment({Key? key, required this.chosenEvent}) : super(key: key);
+
+  @override
+  State<EventPayment> createState() => _EventPaymentState();
+}
+
+class _EventPaymentState extends State<EventPayment> {
+  bool isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    saveEvent(widget.chosenEvent);
+  }
+
+  Future saveEvent(ScheduledEvent event) async{
+    setState(() => isSaving = true);
+    await EventDatabase.instance.insertEvent(event);
+    setState(() => isSaving = false);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final paymentTime = widget.chosenEvent.time;
     final dateFormat = DateFormat('d MMM yyyy HH:mm:ss');
-    final todayDate = dateFormat.format(now);
+    final todayDate = dateFormat.format(paymentTime);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,14 +45,17 @@ class EventPayment extends StatelessWidget {
         title: const Center(child: Text("Payment Status")),
         backgroundColor: Colors.white,
       ),
-      body: Stack(
+      body: isSaving ? const Center(child: CircularProgressIndicator()) : widget.chosenEvent.chosenDate.isNotEmpty ? Stack(
         children: [
           const SizedBox(
             height: double.infinity,
           ),
           Container(
             color: Colors.blueAccent,
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             height: 250,
             child: Column(
               children: const [
@@ -59,7 +86,10 @@ class EventPayment extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Container(
-                width: MediaQuery.of(context).size.width - 40,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 40,
                 height: 300,
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
@@ -79,15 +109,15 @@ class EventPayment extends StatelessWidget {
                           horizontal: 20.0, vertical: 16.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children: [
                           Text(
-                            "Rp 15.000",
-                            style: TextStyle(
+                            widget.chosenEvent.price,
+                            style: const TextStyle(
                                 color: Colors.orange,
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Text(
+                          const Text(
                             "Hide detail",
                             style: TextStyle(
                                 color: Colors.blue,
@@ -103,18 +133,21 @@ class EventPayment extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0, left: 20.0),
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               "Order Info",
                               style:
-                                  TextStyle(color: Colors.grey, fontSize: 14),
+                              TextStyle(color: Colors.grey, fontSize: 14),
                             ),
                             Text(
-                              "Order User",
-                              style: TextStyle(
+                              widget.chosenEvent.buyerName,
+                              style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             )
                           ],
@@ -124,18 +157,21 @@ class EventPayment extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0, left: 20.0),
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               "Amount",
                               style:
-                                  TextStyle(color: Colors.grey, fontSize: 14),
+                              TextStyle(color: Colors.grey, fontSize: 14),
                             ),
                             Text(
-                              "Rp 15.000",
-                              style: TextStyle(
+                              widget.chosenEvent.price,
+                              style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             )
                           ],
@@ -145,14 +181,17 @@ class EventPayment extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0, left: 20.0),
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
                               "Transaction Time",
                               style:
-                                  TextStyle(color: Colors.grey, fontSize: 14),
+                              TextStyle(color: Colors.grey, fontSize: 14),
                             ),
                             Text(
                               todayDate,
@@ -164,7 +203,7 @@ class EventPayment extends StatelessWidget {
                       ),
                     )
                   ],
-                ),
+                ) ,
               ),
             ),
           ),
@@ -172,17 +211,17 @@ class EventPayment extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(credential: null),
-                      ),
-                    );
+                    Navigator.pushReplacement(context, MaterialPageRoute(
+                      builder: (context) => const BottomNavigation(credential: null),
+                    ));
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.blue),
@@ -207,7 +246,8 @@ class EventPayment extends StatelessWidget {
             ),
           )
         ],
-      ),
+      ) : const NotifDialog(information: "Error! Please complete all fills."),
     );
   }
 }
+

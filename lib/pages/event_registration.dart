@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:hybrd_app/models/hybrid_events.dart';
+import 'package:hybrd_app/models/schedule_event.dart';
 import 'package:hybrd_app/notification/snackbar_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,8 +10,9 @@ import 'event_payment.dart';
 
 class EventRegister extends StatefulWidget {
   final HybridEvent chosenEvent;
+  final int? idImage;
 
-  const EventRegister({Key? key, required this.chosenEvent}) : super(key: key);
+  const EventRegister({Key? key, required this.chosenEvent, this.idImage}) : super(key: key);
 
   @override
   State<EventRegister> createState() => _EventRegisterState();
@@ -25,9 +27,34 @@ class _EventRegisterState extends State<EventRegister> {
   final _attendeeFormKey = GlobalKey<FormState>();
 
   int _counter = 1;
-  String _attendeeName = "Buyer name";
-  String _attendeeMail = "Email";
+  late String _attendeeName;
+  late String _attendeeMail;
+  late String _orderId;
+  late String _ticketId;
+  late String _eventName;
+  late String _buyerName;
+  late String _chosenDate;
+  late String _chosenTime;
+  late String _link;
+  late bool _isOnline;
+  late String _cost;
+  DateTime time = DateTime.now();
 
+  @override
+  void initState() {
+    super.initState();
+    _attendeeName = "Buyer name";
+    _attendeeMail = "Email";
+    _orderId = "${DateFormat('ddMMyy').format(DateTime.now())}${ticketGen(6)}";
+    _ticketId = ticketGen(32);
+    _eventName = widget.chosenEvent.name;
+    _buyerName = _attendeeName;
+    _chosenDate = "";
+    _chosenTime = "";
+    _link = widget.chosenEvent.hybrid;
+    _isOnline = widget.chosenEvent.isOnline;
+    _cost = priceToString(widget.chosenEvent.price);
+  }
 
   @override
   void dispose() {
@@ -238,7 +265,11 @@ class _EventRegisterState extends State<EventRegister> {
                                                           onPressed: () {
                                                             _controllerDate
                                                                 .text =
-                                                            listEventDate(widget.chosenEvent)[index];
+                                                            listEventDate(widget
+                                                                .chosenEvent)[index];
+                                                            _chosenDate =
+                                                                _controllerDate
+                                                                    .text;
                                                             Navigator.pop(
                                                                 context);
                                                           },
@@ -253,7 +284,8 @@ class _EventRegisterState extends State<EventRegister> {
                                                                       .circular(
                                                                       20.0),),),),),
                                                           child: Text(
-                                                            listEventDate(widget.chosenEvent)[index],
+                                                            listEventDate(widget
+                                                                .chosenEvent)[index],
                                                             style: const TextStyle(
                                                                 color: Colors
                                                                     .grey),
@@ -405,6 +437,9 @@ class _EventRegisterState extends State<EventRegister> {
                                                                 .text =
                                                             widget.chosenEvent
                                                                 .listHour[index];
+                                                            _chosenTime =
+                                                                _controllerHour
+                                                                    .text;
                                                             Navigator.pop(
                                                                 context);
                                                           },
@@ -479,6 +514,8 @@ class _EventRegisterState extends State<EventRegister> {
                                         setState(() {
                                           if (_counter > 1) {
                                             _counter--;
+                                            _cost = priceToString(_counter *
+                                                widget.chosenEvent.price);
                                             _controllerAttendeeCount.text =
                                                 _counter.toString();
                                           }
@@ -518,6 +555,8 @@ class _EventRegisterState extends State<EventRegister> {
                                         setState(() {
                                           if (_counter < 5) {
                                             _counter++;
+                                            _cost = priceToString(_counter *
+                                                widget.chosenEvent.price);
                                             _controllerAttendeeCount.text =
                                                 _counter.toString();
                                           }
@@ -683,7 +722,7 @@ class _EventRegisterState extends State<EventRegister> {
                                                                 validator: (
                                                                     value) {
                                                                   bool validUsername = RegExp(
-                                                                      r"^[a-zA-Z0-9]+$")
+                                                                      r"^[a-zA-Z0-9\s]+$")
                                                                       .hasMatch(
                                                                       value!);
                                                                   if (value
@@ -829,6 +868,8 @@ class _EventRegisterState extends State<EventRegister> {
                                                                             _attendeeMail =
                                                                                 _controllerAttendeeMail
                                                                                     .text;
+                                                                            _buyerName =
+                                                                                _attendeeName;
                                                                             Navigator
                                                                                 .pop(
                                                                                 context);
@@ -956,7 +997,36 @@ class _EventRegisterState extends State<EventRegister> {
                           .size
                           .width,
                       margin: const EdgeInsets.symmetric(horizontal: 40),
-                      child: const PopUpChoices())
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) =>
+                               EventPayment(chosenEvent: ScheduledEvent(
+                                  orderId: _orderId,
+                                  ticketId: _ticketId,
+                                  eventName: _eventName,
+                                  buyerName: _buyerName,
+                                  chosenDate: _chosenDate,
+                                  chosenTime: _chosenTime,
+                                  link: _link,
+                                  idImg: widget.idImage,
+                                  price: _cost,
+                                  isOnline: _isOnline,
+                                  time: time,  ))),
+                            );
+                          },
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20.0))
+                                  )
+                              )
+                          ),
+                          child: const Text("Pay", style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white
+                          ),)))
                 ]),
               ),
             ),
@@ -964,31 +1034,6 @@ class _EventRegisterState extends State<EventRegister> {
         ),
       ),
     );
-  }
-}
-
-class PopUpChoices extends StatelessWidget {
-  const PopUpChoices({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-        onPressed: () {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => EventPayment())
-          );
-        },
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-                const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))
-                )
-            )
-        ),
-        child: const Text("Pay", style: TextStyle(
-            fontSize: 18,
-            color: Colors.white
-        ),));
   }
 }
 
@@ -1029,4 +1074,12 @@ List<String> listEventDate(HybridEvent event) {
     }
   }
   return listDate;
+}
+
+String ticketGen(int length) {
+  var characters = "quickbrownfoxjumpsoverthelazydog123456789";
+  final result = List.generate(
+      length, (index) => characters[Random().nextInt(characters.length)]
+  ).join().toUpperCase();
+  return result;
 }
