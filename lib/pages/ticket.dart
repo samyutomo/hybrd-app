@@ -1,8 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hybrd_app/models/hybrid_events.dart';
+import 'package:hybrd_app/models/schedule_event.dart';
 
 class TicketPage extends StatelessWidget {
-  const TicketPage({Key? key}) : super(key: key);
+  final ScheduledEvent detailEvent;
+
+  const TicketPage({Key? key, required this.detailEvent}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +53,7 @@ class TicketPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Power Point Bisa",
+                              detailEvent.eventName,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 20,
@@ -59,7 +63,9 @@ class TicketPage extends StatelessWidget {
                             const SizedBox(
                               height: 10.0,
                             ),
-                            Text("Ticket ID #12345"),
+                            Text("Ticket ID #${detailEvent.ticketId}", style: const TextStyle(
+                              fontSize: 12
+                            ),),
                             const SizedBox(
                               height: 20.0,
                             ),
@@ -67,29 +73,32 @@ class TicketPage extends StatelessWidget {
                               children: [
                                 CachedNetworkImage(
                                   imageUrl:
-                                      "https://i.pinimg.com/564x/cd/8b/9f/cd8b9f844b12078115e4eabd4f98e1a5.jpg",
+                                  detailEvent.isOnline ?
+                                  onlineEventList[detailEvent.idImg??0].hybridType : onsiteEventList[detailEvent.idImg??0].hybridType,
                                   width: 50,
                                   height: 50,
                                   fit: BoxFit.fitHeight,
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 10.0),
-                                  height: 50.0,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Link :",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        "http://www.zoom.us",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                                Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 10.0),
+                                    height: 50.0,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          detailEvent.isOnline ? "Link :" : "Alamat :",
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          detailEvent.link,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -100,15 +109,15 @@ class TicketPage extends StatelessWidget {
                             SizedBox(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text(
+                                children: [
+                                  const Text(
                                     "Attendee Information",
                                     style: TextStyle(
                                         color: Colors.grey, fontSize: 14),
                                   ),
                                   Text(
-                                    "Aminatus",
-                                    style: TextStyle(
+                                    detailEvent.buyerName,
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
                                   )
@@ -121,41 +130,45 @@ class TicketPage extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                SizedBox(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Text(
-                                        "Date",
-                                        style: TextStyle(
-                                            color: Colors.grey, fontSize: 14),
-                                      ),
-                                      Text(
-                                        "Mon 20 Dec",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10.0, left: 20.0),
+                                Expanded(
+                                  flex: 1,
                                   child: SizedBox(
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: const [
+                                      children: [
+                                        const Text(
+                                          "Date",
+                                          style: TextStyle(
+                                              color: Colors.grey, fontSize: 14),
+                                        ),
                                         Text(
+                                          detailEvent.chosenDate,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: SizedBox(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
                                           "Time",
                                           style: TextStyle(
                                               color: Colors.grey, fontSize: 14),
                                         ),
                                         Text(
-                                          "10:00 WIB",
-                                          style: TextStyle(
+                                          "${detailEvent.chosenTime} WIB",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
                                         )
@@ -177,7 +190,7 @@ class TicketPage extends StatelessWidget {
                               alignment: Alignment.center,
                               child: Column(
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Show the QR at the counter",
                                     style: TextStyle(
                                         fontSize: 16,
@@ -185,7 +198,7 @@ class TicketPage extends StatelessWidget {
                                   ),
                                   CachedNetworkImage(
                                     imageUrl:
-                                        "https://i.pinimg.com/originals/21/6a/cc/216acc556a3f88e085ddbc07fa17b2a2.jpg",
+                                        detailEvent.isOnline? 'https://i.pinimg.com/originals/21/6a/cc/216acc556a3f88e085ddbc07fa17b2a2.jpg' : 'https://i.pinimg.com/originals/5d/49/f1/5d49f1a640ba999fb073ad2f6020776a.jpg',
                                     width: 200,
                                     height: 200,
                                     fit: BoxFit.cover,

@@ -15,8 +15,10 @@ class MainHybrd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "Hybrd",
         theme: ThemeData(primarySwatch: Colors.orange),
-        home: const SplashLogo());
+        home: const SplashLogo()
+    );
   }
 }

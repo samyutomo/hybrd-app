@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hybrd_app/pages/home.dart';
+import 'package:hybrd_app/navigation/bottom_navigation.dart';
+import 'package:hybrd_app/notification/snackbar_dialog.dart';
 
 class SignInMember extends StatefulWidget{
   const SignInMember({Key? key}) : super(key: key);
@@ -141,30 +142,18 @@ class _SignInMemberState extends State<SignInMember> {
                                         password: _controllerPass.text,
                                       );
                                       Navigator.pushReplacement(context,
-                                          MaterialPageRoute(builder: (context) =>  HomePage(credential: credential)));
+                                          MaterialPageRoute(builder: (context) =>  BottomNavigation(credential: credential)));
                                     } on FirebaseAuthException catch (e) {
                                       if (e.code == 'user-not-found') {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return const AlertDialog(
-                                                  content:
-                                                  Text("No user found for that email"));
-                                            });
+                                        notifSnackBar(context, "No user found for that email");
                                       } else if (e.code == 'wrong-password') {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return const AlertDialog(
-                                                  content: Text(
-                                                      "Wrong Password!"));
-                                            });
+                                        notifSnackBar(context, "Wrong Password!");
                                       }
                                     } catch (e) {
                                       showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return AlertDialog(content: Text(e.toString()));
+                                            return NotifDialog(information: e.toString());
                                           });
                                     }
                                   }

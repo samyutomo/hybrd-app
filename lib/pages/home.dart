@@ -1,17 +1,18 @@
 import 'dart:math';
-import 'package:hybrd_app/pages/event_registration.dart';
+import 'package:hybrd_app/onboarding/onboard.dart';
 import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hybrd_app/pages/event_registration.dart';
 import 'package:hybrd_app/models/hybrid_events.dart';
 import 'package:hybrd_app/pages/brief_description.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 
 class HomePage extends StatefulWidget {
   final UserCredential? credential;
 
-  const HomePage({Key? key, required this.credential}) : super(key: key);
+  const HomePage({Key? key, this.credential}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                       child: ElevatedButton(
                           onPressed: () async {
                             await FirebaseAuth.instance.signOut();
-                            Navigator.pop(context);
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const OnBoardingPage()));
                           },
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all(
@@ -443,7 +444,7 @@ class _HomePageState extends State<HomePage> {
                                                         child: ElevatedButton(
                                                           onPressed: () {
                                                             Navigator.push(context,
-                                                                MaterialPageRoute(builder: (context) => EventRegister(chosenEvent: event)),
+                                                                MaterialPageRoute(builder: (context) => EventRegister(chosenEvent: event, idImage: index,)),
                                                             );
                                                           },
                                                           child: const Text(
@@ -988,7 +989,7 @@ class _HomePageState extends State<HomePage> {
                                                         child: ElevatedButton(
                                                           onPressed: () {
                                                             Navigator.push(context,
-                                                                MaterialPageRoute(builder: (context)=> EventRegister(chosenEvent: event),
+                                                                MaterialPageRoute(builder: (context)=> EventRegister(chosenEvent: event, idImage: index,),
                                                                 ),
                                                             );
                                                           },
@@ -1359,4 +1360,6 @@ class _HomePageState extends State<HomePage> {
     }
     return "Rp $formattedPrice";
   }
+
+
 }
