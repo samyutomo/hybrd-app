@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "559643969918",
+    "project_id": "fir-flutter-hybrd",
+    "storage_bucket": "fir-flutter-hybrd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:559643969918:android:9055b7e01bf6bdda1f4b2f",
+        "android_client_info": {
+          "package_name": "id.samyutomo.app.hybrd_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "559643969918-0m0t84m8dbeuksdbn9vn91g3jgi6ne26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrrNQ0KKTlv3Z1oIBlpmu_NNkaZIyzlSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "559643969918-0m0t84m8dbeuksdbn9vn91g3jgi6ne26.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
